@@ -40,6 +40,7 @@ public class ActionFieldUI implements ActionListener {
         dialog.setModal(true);
 
     }
+
     public void setChooseTankPanel() {
 
         if(dialog == null) {

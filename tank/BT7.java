@@ -2,6 +2,7 @@ package lesson6_9.adapter.tank6.tank;
 
 
 import lesson6_9.adapter.tank6.ActionField;
+import lesson6_9.adapter.tank6.battlefield.Algo2;
 import lesson6_9.adapter.tank6.battlefield.Algo3;
 import lesson6_9.adapter.tank6.battlefield.BattleField;
 
@@ -15,7 +16,10 @@ public class BT7 extends AbstractTank {
 
     private int speed;
 
-    List<int[]> path = null;
+    private Object[] actions;
+    private Object[] actions2;
+    private int step = 0;
+    private List<int[]> path = null;
 
     public BT7(ActionField actionField, BattleField battleField, int x, int y, Direction direction) {
         super(actionField, battleField, x, y, direction);
@@ -36,12 +40,86 @@ public class BT7 extends AbstractTank {
         algo3 = new Algo3(battleField.getStringBattleField(), this);
     }
 
-    public Object[] actions;
-
-    private int step = 0;
-
     @Override
     public Action setUp() {
+
+        if (isAgressorNearTheEagle()) {
+
+            return killAgressor();
+        }
+
+        else return protectEagle();
+    }
+
+    @Override
+    public int getMovePath() {
+        return 0;
+    }
+
+    public boolean isAgressorNearTheEagle() {
+
+        if ( actionField.getAgressor().getY() >= 320) {
+            return true;
+        }
+        return false;
+    }
+
+    public Action killAgressor() {
+
+        step = 0;
+        algo2 = new Algo2(battleField.getStringBattleField(), actionField, this);
+        actions = null;
+
+        if (actions == null) {
+            actions2 = null;
+            List<int[]> path = algo2.movePath();
+            actions = new Object[path.size()];
+
+            for (int i = 0; i < path.size() - 1; i++) {
+                if (path.get(i)[0] > path.get(i + 1)[0]) {
+                    actions[i] = Direction.UP;
+                }
+                else if (path.get(i)[0] < path.get(i + 1)[0]) {
+                    actions[i] = Direction.DOWN;
+                }
+                else if (path.get(i)[1] > path.get(i + 1)[1]) {
+                    actions[i] = Direction.LEFT;
+                }
+                else {
+                    actions[i] = Direction.RIGHT;
+                }
+            }
+
+            actions2 = new Object[actions.length * 2 - 1];
+
+            System.out.println("action length " + actions.length);
+            System.out.println("action2 length " + actions2.length);
+            for (int i = 0, j = 0; i < actions.length && j < actions2.length - 2; i++) {
+                actions2[j] = actions[i];
+                actions2[j + 1] = Action.MOVE;
+                System.out.println("action2[" + j + "]");
+                j = j + 2;
+            }
+            actions2[actions2.length - 1] = Action.FIRE;
+
+            actions = actions2;
+
+            for (Object o : actions) {
+                System.out.println(o);
+            }
+        }
+
+        if (actions.length == step ){
+            return null;
+        }
+
+        if (!(actions[step] instanceof Action)) {
+            turn((Direction) actions[step++]);
+        }
+        return (Action) actions[step++];
+    }
+
+    public Action protectEagle() {
 
         if (actions != null && step == actions.length) {
             step = 0;
@@ -68,7 +146,7 @@ public class BT7 extends AbstractTank {
                     actions[i] = Direction.RIGHT;
                 }
             }
-            Object[] actions2 = new Object[actions.length * 2];
+            actions2 = new Object[actions.length * 2];
             for (int i = 0, j = 0; i < actions.length && j < actions2.length - 1; i++) {
                 actions2[j] = actions[i];
                 actions2[j + 1] = Action.MOVE;
@@ -88,10 +166,5 @@ public class BT7 extends AbstractTank {
             turn((Direction) actions[step++]);
         }
         return (Action) actions[step++];
-    }
-
-    @Override
-    public int getMovePath() {
-        return 0;
     }
 }

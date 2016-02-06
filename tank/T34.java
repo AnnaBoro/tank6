@@ -56,6 +56,7 @@ public class T34 extends AbstractTank {
 
     @Override
     public Action setUp() {
+
         step = 0;
         algo2 = new Algo2(battleField.getStringBattleField(), actionField, this);
         actions = null;

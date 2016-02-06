@@ -20,7 +20,7 @@ public class ActionField extends JPanel {
     private AbstractTank defender;
     private AbstractTank agressor;
     private AbstractTank defender2;
-    private int[][] randomArr = {{512, 256}, {512, 256}, {512, 256}};
+    private int[][] randomArr = {{64, 192}, {64, 64}, {448, 64}};
 //    {{64, 64}, {64, 448}, {448, 64}};
     private int randomPosition = -1;
     private JFrame frame;
@@ -29,8 +29,6 @@ public class ActionField extends JPanel {
     private int enemyScore;
 
     public ActionField() throws Exception {
-
-//        bf = new BattleField();
 
         frame = new JFrame("BATTLE FIELD, Lesson 5");
         actionFieldUI = new ActionFieldUI(this, frame);
@@ -53,12 +51,11 @@ public class ActionField extends JPanel {
         int x2 = xy[0];
         agressor = null;
         agressor = new Tiger(this, bf, x2, y2, Direction.DOWN);
-        defender = new T34(this, bf, 64, 448, Direction.LEFT);
+        defender = new T34(this, bf, 0, 0, Direction.LEFT);
         defender2 = new BT7(this, bf, 320, 512, Direction.UP);
 
         frame.pack();
         frame.setVisible(true);
-        //frame.repaint();
     }
 
     public void runTheGame() throws Exception {
@@ -67,27 +64,17 @@ public class ActionField extends JPanel {
         while (!stopGameCondition()) {
 
             processAction(agressor.setUp(), agressor);
-            processAction(defender.setUp(), defender);
-//            processAction(defender2.setUp(), defender2);
+            //processAction(defender.setUp(), defender);
+            processAction(defender2.setUp(), defender2);
 
         }
         System.out.println("finish");
 
-
         actionFieldUI.setViewScorePanel();
-        //actionFieldUI.dialog.setModal(true);
-        //actionFieldUI.dialog.setVisible(true);
 
-        if (actionFieldUI.isReRun())
+        if (actionFieldUI.isReRun()) {
             runTheGame();
-
-
-//        while (!bf.getBattleField()[8][4].isDestroyed() && bf.getBattleField()[8][4] instanceof Eagle) {
-//            processAction(defender2.setUp(), defender2);
-//        }
-//        while (!bf.getBattleField()[8][4].isDestroyed() && bf.getBattleField()[8][4] instanceof Eagle) {
-//            processAction(agressor.setUp(), agressor);
-//        }
+        }
     }
 
     public boolean stopGameCondition() {
@@ -117,7 +104,7 @@ public class ActionField extends JPanel {
                 tank.getBullet().destroy();
             }
 
-            else if (removeTank()) {
+            else if (removeTank(tank)) {
                 agressor.destroy();
                 tank.getBullet().destroy();
                 repaint();
@@ -181,9 +168,13 @@ public class ActionField extends JPanel {
         return false;
     }
 
-    public boolean removeTank() throws InterruptedException {
+    public boolean removeTank(AbstractTank tank) throws InterruptedException {
 
-        Bullet bullet1 = defender.getBullet();
+        if (tank instanceof Tiger) {
+
+            return false;
+        }
+        Bullet bullet1 = tank.getBullet();
 
         if (bullet1 != null) {
             String quadrant = getQuadrant(bullet1.getX(), bullet1.getY());
@@ -194,7 +185,7 @@ public class ActionField extends JPanel {
                     ((Tiger) agressor).setArmor(((Tiger) agressor).getArmor() - 1);
                     bullet1.destroy();
                     repaint();
-                    defender.fire();
+                    tank.fire();
                     return false;
                 } else if (((Tiger)agressor).getArmor() == 0) {
                     ((Tiger) agressor).setArmor(((Tiger) agressor).getArmor() - 1);
@@ -242,11 +233,15 @@ public class ActionField extends JPanel {
         defender.draw(g);
         agressor.draw(g);
         defender2.draw(g);
+
         if (defender.getBullet() != null) {
             defender.getBullet().draw(g);
         }
         if (agressor.getBullet() != null) {
             agressor.getBullet().draw(g);
+        }
+        if (defender2.getBullet() != null) {
+            defender2.getBullet().draw(g);
         }
     }
 
@@ -282,7 +277,7 @@ public class ActionField extends JPanel {
                 }
                 else System.out.println("Wrong direction");
             }
-//            processTankInterception(tank);
+            processTankInterception(tank);
             repaint();
             Thread.sleep(tank.getSpeed()/2);
 
@@ -293,26 +288,22 @@ public class ActionField extends JPanel {
     private void processTankInterception(AbstractTank tank) throws InterruptedException {
 
         if (tank.getDirection() == Direction.UP) {
-            if (tank.getX() == getAgressor().getX() && ( (tank.getY() - 64) == getAgressor().getY()) ||
-                    (tank.getY() - 128) == getAgressor().getY()) {
+            if (tank.getX() == getAgressor().getX() && ( (tank.getY() - 64) >= getAgressor().getY())) {
                 tank.fire();
             }
         }
         else if (tank.getDirection() == Direction.DOWN) {
-            if (tank.getX() == getAgressor().getX() && (tank.getY() + 64) == getAgressor().getY() ||
-                    (tank.getY() + 128) == getAgressor().getY()) {
+            if (tank.getX() == getAgressor().getX() && (tank.getY() + 64) <= getAgressor().getY()) {
                 tank.fire();
             }
         }
         else if (tank.getDirection() == Direction.LEFT) {
-            if (tank.getY() == getAgressor().getY() && (tank.getX() - 64) == getAgressor().getX() ||
-            (tank.getX() - 128) == getAgressor().getX()) {
+            if (tank.getY() == getAgressor().getY() && (tank.getX() - 64) >= getAgressor().getX()) {
                 tank.fire();
             }
         }
         else if (tank.getDirection() == Direction.RIGHT) {
-            if (tank.getY() == getAgressor().getY() && (tank.getX() + 64) == getAgressor().getX() ||
-                    (tank.getX() + 128) == getAgressor().getX()) {
+            if (tank.getY() == getAgressor().getY() && (tank.getX() + 64) <= getAgressor().getX() ) {
                 tank.fire();
             }
         }
