@@ -1,21 +1,20 @@
-package lesson6_9.adapter.tank6.tank;
+package tankproject.tank;
 
-import lesson6_9.adapter.tank6.ActionField;
-import lesson6_9.adapter.tank6.battlefield.Algo;
-import lesson6_9.adapter.tank6.battlefield.BattleField;
-import lesson6_9.adapter.tank6.battlefield.Brick;
+
+import tankproject.ActionField;
+import tankproject.battlefield.Algo;
+import tankproject.battlefield.BattleField;
+import tankproject.battlefield.Brick;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
 public abstract class AbstractTank implements Tank {
 
-
     protected Algo algo;
     protected Algo algo2;
     protected Algo algo3;
     protected Direction direction;
-
     protected Bullet bullet;
 
     private int x;

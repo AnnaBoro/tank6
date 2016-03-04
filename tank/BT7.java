@@ -1,10 +1,10 @@
-package lesson6_9.adapter.tank6.tank;
+package tankproject.tank;
 
 
-import lesson6_9.adapter.tank6.ActionField;
-import lesson6_9.adapter.tank6.battlefield.Algo2;
-import lesson6_9.adapter.tank6.battlefield.Algo3;
-import lesson6_9.adapter.tank6.battlefield.BattleField;
+import tankproject.ActionField;
+import tankproject.battlefield.Algo2;
+import tankproject.battlefield.Algo3;
+import tankproject.battlefield.BattleField;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -58,7 +58,7 @@ public class BT7 extends AbstractTank {
 
     public boolean isAgressorNearTheEagle() {
 
-        if ( actionField.getAgressor().getY() >= 320) {
+        if ( actionField.getAgressor().getY() >= 192) {
             return true;
         }
         return false;

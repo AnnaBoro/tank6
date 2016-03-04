@@ -1,8 +1,8 @@
-package lesson6_9.adapter.tank6.tank;
+package tankproject.tank;
 
 
-import lesson6_9.adapter.tank6.battlefield.Destroyable;
-import lesson6_9.adapter.tank6.battlefield.Drawable;
+import tankproject.battlefield.Destroyable;
+import tankproject.battlefield.Drawable;
 
 import java.awt.*;
 

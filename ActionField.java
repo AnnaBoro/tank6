@@ -1,12 +1,12 @@
-package lesson6_9.adapter.tank6;
+package tankproject;
 
 
-import lesson6_9.adapter.tank6.battlefield.BattleField;
-import lesson6_9.adapter.tank6.battlefield.Brick;
-import lesson6_9.adapter.tank6.battlefield.ClearField;
-import lesson6_9.adapter.tank6.battlefield.Eagle;
-import lesson6_9.adapter.tank6.tank.*;
-import lesson6_9.adapter.tank6.tank.Action;
+import tankproject.battlefield.BattleField;
+import tankproject.battlefield.Brick;
+import tankproject.battlefield.ClearField;
+import tankproject.battlefield.Eagle;
+import tankproject.tank.Action;
+import tankproject.tank.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,16 +20,18 @@ public class ActionField extends JPanel {
     private AbstractTank defender;
     private AbstractTank agressor;
     private AbstractTank defender2;
-    private int[][] randomArr = {{64, 192}, {64, 64}, {448, 64}};
+    private int[][] randomArr = {{320, 192}, {64, 64}, {448, 64}};
 //    {{64, 64}, {64, 448}, {448, 64}};
     private int randomPosition = -1;
     private JFrame frame;
     private ActionFieldUI actionFieldUI;
     private int yourScore;
     private int enemyScore;
+    private SaveGame saveGame;
 
     public ActionField() throws Exception {
 
+        saveGame = new SaveGame();
         frame = new JFrame("BATTLE FIELD, Lesson 5");
         actionFieldUI = new ActionFieldUI(this, frame);
     }
@@ -86,12 +88,13 @@ public class ActionField extends JPanel {
 
     public void processAction(Action a, AbstractTank t) throws InterruptedException {
 
+        SaveGame.saveAction(t.getClass().getSimpleName() + " "  + t.getDirection() + " " + a);
+
         if (a == Action.MOVE) {
             processMove(t);
         }
 
         else if (a == Action.FIRE) {
-//            processFire(t);
             t.fire();
         }
     }
@@ -315,6 +318,8 @@ public class ActionField extends JPanel {
     }
 
     public void processFire(AbstractTank tank) throws InterruptedException {
+
+        SaveGame.saveAction(tank.getClass().getSimpleName() + " " + tank.getDirection() + " " + "FIRE");
 
         while (isOnTheField(tank.getBullet())) {
             for (int i = 0; i < 64; ) {

@@ -1,4 +1,4 @@
-package lesson6_9.adapter.tank6.battlefield;
+package tankproject.battlefield;
 
 
 public class ObjAlgo {

@@ -1,4 +1,4 @@
-package lesson6_9.adapter.tank6;
+package tankproject;
 
 
 public class Launcher {

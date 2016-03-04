@@ -1,9 +1,9 @@
-package lesson6_9.adapter.tank6.tank;
+package tankproject.tank;
 
 
-import lesson6_9.adapter.tank6.ActionField;
-import lesson6_9.adapter.tank6.battlefield.Algo1;
-import lesson6_9.adapter.tank6.battlefield.BattleField;
+import tankproject.ActionField;
+import tankproject.battlefield.Algo1;
+import tankproject.battlefield.BattleField;
 
 import javax.imageio.ImageIO;
 import java.io.File;

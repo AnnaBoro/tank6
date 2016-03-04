@@ -1,4 +1,4 @@
-package lesson6_9.adapter.tank6.battlefield;
+package tankproject.battlefield;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

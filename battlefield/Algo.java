@@ -1,6 +1,6 @@
-package lesson6_9.adapter.tank6.battlefield;
+package tankproject.battlefield;
 
-import lesson6_9.adapter.tank6.tank.AbstractTank;
+import tankproject.tank.AbstractTank;
 
 import java.util.List;
 
