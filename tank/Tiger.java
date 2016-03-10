@@ -44,10 +44,27 @@ public class Tiger extends AbstractTank {
     public Object[] actions;
 
     private int step = 0;
+    private int stepSave = 0;
+
+    @Override
+    public Action loadSetUp(){
+
+        actionUtility.getGameRepeat();
+        List<Object> saveList = actionUtility.getListTank2();
+
+        if (saveList.size() == stepSave ){
+            return null;
+        }
+
+        if (!(saveList.get(stepSave) instanceof Action)) {
+            turn((Direction) saveList.get(stepSave++));
+        }
+
+        return (Action) saveList.get(stepSave++);
+    }
 
     @Override
     public Action setUp() {
-
 
         if (actions == null) {
             List<int[]> path = algo.movePath();
@@ -87,7 +104,6 @@ public class Tiger extends AbstractTank {
         if (actions.length == step ){
             return null;
         }
-
 
         if (!(actions[step] instanceof Action)) {
 

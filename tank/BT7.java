@@ -2,13 +2,16 @@ package tankproject.tank;
 
 
 import tankproject.ActionField;
+import tankproject.ActionUtility;
 import tankproject.battlefield.Algo2;
 import tankproject.battlefield.Algo3;
 import tankproject.battlefield.BattleField;
+import tankproject.battlefield.ObjAlgo;
 
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,6 +22,7 @@ public class BT7 extends AbstractTank {
     private Object[] actions;
     private Object[] actions2;
     private int step = 0;
+    private int stepSave = 0;
     private List<int[]> path = null;
 
     public BT7(ActionField actionField, BattleField battleField, int x, int y, Direction direction) {
@@ -38,6 +42,23 @@ public class BT7 extends AbstractTank {
         }
         speed = super.getSpeed() / 2;
         algo3 = new Algo3(battleField.getStringBattleField(), this);
+    }
+
+    @Override
+    public Action loadSetUp(){
+
+        actionUtility.getGameRepeat();
+        List<Object> saveList = actionUtility.getListTank1();
+
+        if (saveList.size() == stepSave ){
+            return null;
+        }
+
+        if (!(saveList.get(stepSave) instanceof Action)) {
+            turn((Direction) saveList.get(stepSave++));
+        }
+
+        return (Action) saveList.get(stepSave++);
     }
 
     @Override

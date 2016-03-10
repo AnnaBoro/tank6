@@ -8,6 +8,8 @@ public interface Tank extends Drawable, Destroyable {
 
     public Action setUp();
 
+    public Action loadSetUp();
+
     public void move() throws InterruptedException;
 
     public Bullet fire() throws InterruptedException;

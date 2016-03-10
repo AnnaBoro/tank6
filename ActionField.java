@@ -20,14 +20,15 @@ public class ActionField extends JPanel {
     private AbstractTank defender;
     private AbstractTank agressor;
     private AbstractTank defender2;
-    private int[][] randomArr = {{320, 192}, {64, 64}, {448, 64}};
-//    {{64, 64}, {64, 448}, {448, 64}};
+    private int[][] randomArr = {{320, 192}, {320, 192}, {320, 192}};
+//    {{320, 192}, {64, 64}, {448, 64}};
     private int randomPosition = -1;
     private JFrame frame;
     private ActionFieldUI actionFieldUI;
     private int yourScore;
     private int enemyScore;
     private SaveGame saveGame;
+    private boolean needSave = false;
 
     public ActionField() throws Exception {
 
@@ -36,7 +37,7 @@ public class ActionField extends JPanel {
         actionFieldUI = new ActionFieldUI(this, frame);
     }
 
-    public void initFrame() throws Exception {
+    public void initFrame(boolean isSavedGame) throws Exception {
 
         bf = new BattleField();
 
@@ -46,23 +47,41 @@ public class ActionField extends JPanel {
         frame.getContentPane().remove(this);
         frame.getContentPane().add(this);
 
-        actionFieldUI.setChooseTankPanel();
+        if (!isSavedGame) {
 
-        int[] xy = randomArr[getRandomNum()];
-        int y2 = xy[1];
-        int x2 = xy[0];
-        agressor = null;
-        agressor = new Tiger(this, bf, x2, y2, Direction.DOWN);
-        defender = new T34(this, bf, 0, 0, Direction.LEFT);
-        defender2 = new BT7(this, bf, 320, 512, Direction.UP);
+            actionFieldUI.setChooseTankPanel();
+            int[] xy = randomArr[getRandomNum()];
+            int y2 = xy[1];
+            int x2 = xy[0];
+            agressor = null;
+            agressor = new Tiger(this, bf, x2, y2, Direction.DOWN);
+            defender = new T34(this, bf, 0, 0, Direction.LEFT);
+            defender2 = new BT7(this, bf, 320, 512, Direction.UP);
 
+        }
+        else {
+            int[] xy = randomArr[getRandomNum()];
+            int y2 = xy[1];
+            int x2 = xy[0];
+
+            agressor = new Tiger(this, bf, 320, 192, Direction.DOWN);
+            defender = new T34(this, bf, 0, 0, Direction.LEFT);
+            defender2 = new BT7(this, bf, 320, 512, Direction.UP);
+        }
         frame.pack();
         frame.setVisible(true);
     }
 
     public void runTheGame() throws Exception {
 
-        initFrame();
+        needSave = true;
+
+        initFrame(false);
+//        gameNumber++;
+//        SaveGame.saveAction("Game " + gameNumber);
+//        SaveGame.saveAction(agressor.getClass().getSimpleName() + " " + agressor.getX() + " " + agressor.getY());
+//        SaveGame.saveAction(defender2.getClass().getSimpleName() + " " + defender2.getX() + " " + defender2.getY());
+
         while (!stopGameCondition()) {
 
             processAction(agressor.setUp(), agressor);
@@ -77,6 +96,23 @@ public class ActionField extends JPanel {
         if (actionFieldUI.isReRun()) {
             runTheGame();
         }
+        needSave = false;
+    }
+
+    public void runSavedGame() throws Exception {
+
+        initFrame(true);
+        int i = 0;
+
+         do {
+
+            processAction(agressor.loadSetUp(), agressor);
+            processAction(defender2.loadSetUp(), defender2);
+            i++;
+
+        } while (i < defender2.getNumAction());
+
+        System.out.println("finish");
     }
 
     public boolean stopGameCondition() {
@@ -88,7 +124,9 @@ public class ActionField extends JPanel {
 
     public void processAction(Action a, AbstractTank t) throws InterruptedException {
 
-        SaveGame.saveAction(t.getClass().getSimpleName() + " "  + t.getDirection() + " " + a);
+        if (needSave) {
+            SaveGame.saveAction(t.getClass().getSimpleName() + " " + t.getDirection() + " " + a);
+        }
 
         if (a == Action.MOVE) {
             processMove(t);
@@ -319,7 +357,9 @@ public class ActionField extends JPanel {
 
     public void processFire(AbstractTank tank) throws InterruptedException {
 
-        SaveGame.saveAction(tank.getClass().getSimpleName() + " " + tank.getDirection() + " " + "FIRE");
+        if (needSave) {
+            SaveGame.saveAction(tank.getClass().getSimpleName() + " " + tank.getDirection() + " " + "FIRE");
+        }
 
         while (isOnTheField(tank.getBullet())) {
             for (int i = 0; i < 64; ) {

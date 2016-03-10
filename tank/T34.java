@@ -16,6 +16,7 @@ public class T34 extends AbstractTank {
     private Object[] actions2;
 
     private int step = 0;
+    private int stepSave = 0;
 
     public T34(ActionField actionField, BattleField battleField) {
 
@@ -52,6 +53,24 @@ public class T34 extends AbstractTank {
         catch (IOException e) {
             System.err.print("Can't find image ");
         }
+    }
+    @Override
+    public Action loadSetUp(){
+
+        Object[] actionsSave = new Object[4];
+        actionsSave[0] = Direction.LEFT;
+        actionsSave[1] = Action.MOVE;
+        actionsSave[2] = Direction.UP;
+        actionsSave[3] = Action.MOVE;
+
+        if (!(actionsSave[stepSave] instanceof Action)) {
+            turn((Direction) actionsSave[stepSave]);
+            stepSave++;
+        }
+        int y = stepSave;
+        stepSave++;
+        return (Action) actionsSave[y];
+
     }
 
     @Override

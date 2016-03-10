@@ -2,6 +2,7 @@ package tankproject.tank;
 
 
 import tankproject.ActionField;
+import tankproject.ActionUtility;
 import tankproject.battlefield.Algo;
 import tankproject.battlefield.BattleField;
 import tankproject.battlefield.Brick;
@@ -16,6 +17,7 @@ public abstract class AbstractTank implements Tank {
     protected Algo algo3;
     protected Direction direction;
     protected Bullet bullet;
+    protected ActionUtility actionUtility;
 
     private int x;
     private int y;
@@ -51,6 +53,7 @@ public abstract class AbstractTank implements Tank {
         this.x = x;
         this.y = y;
         this.direction = direction;
+        actionUtility = new ActionUtility();
     }
 
     @Override
@@ -120,46 +123,6 @@ public abstract class AbstractTank implements Tank {
         return bullet;
     }
 
-    public boolean isEmptyY() {
-
-        int index = getX() / 64;
-        int firstPoint = 0;
-        int endPoint = getY() / 64;
-
-        if (getDirection() == Direction.DOWN) {
-            firstPoint = getY() / 64;
-            endPoint = battleField.getBattleField()[index].length;
-        }
-
-        for (int i = firstPoint; i < endPoint; i++) {
-
-            if (battleField.getBattleField()[i][index] instanceof Brick) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isEmptyX() {
-
-        int index = getY() / 64;
-        int firstPoint = 0;
-        int endPoint = getX() / 64;
-
-        if (getDirection() == Direction.RIGHT) {
-            firstPoint = getX() / 64;
-            endPoint = battleField.getBattleField()[index].length;
-        }
-
-        for (int i = firstPoint; i < endPoint; i++) {
-
-            if (battleField.getBattleField()[index][i] instanceof Brick) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public int[] getRandomQuadrant() {
 
         int[] randomNumbers = getRandomNumbers();
@@ -210,6 +173,11 @@ public abstract class AbstractTank implements Tank {
         return direction;
     }
 
+    public int getNumAction() {
+
+        return actionUtility.getMaxNumAction();
+    }
+
     public void moveRandom() throws InterruptedException {
 
         while (true) {
@@ -229,46 +197,25 @@ public abstract class AbstractTank implements Tank {
             int steps = (tankXNew - getX()) / 64;
             for (int step = 0; step < steps; step++) {
                 turn(Direction.RIGHT);
-//                if ((battleField.getBattleField()[getY() / 64][getX() / 64 + 1] instanceof Brick) ||
-//                        (actionField.getTank().getY() / 64 == actionField.getAgressor().getY() / 64) &&
-//                                ((actionField.getTank().getX() / 64 + 1) == actionField.getAgressor().getX() / 64)) {
-//                    fire();
-//                }
                 move();
             }
         } else if ((tankXNew - getX()) < 0) {
             int steps = Math.abs((tankXNew - getX()) / 64);
             for (int step = 0; step < steps; step++) {
                 turn(Direction.LEFT);
-//                if ((battleField.getBattleField()[getY() / 64][getX() / 64 - 1] instanceof Brick) ||
-//                        (actionField.getTank().getY() / 64 == actionField.getAgressor().getY() / 64) &&
-//                                ((actionField.getTank().getX() / 64 - 1) == actionField.getAgressor().getX() / 64)) {
-//                    fire();
-//                }
                 move();
             }
         }
-
         if ((tankYNew - getY()) > 0) {
             int steps = (tankYNew - getY()) / 64;
             for (int step = 0; step < steps; step++) {
                 turn(Direction.DOWN);
-//                if ((battleField.getBattleField()[getY() / 64 + 1][getX()/64] instanceof Brick) ||
-//                        ((actionField.getTank().getY() / 64 + 1) == actionField.getAgressor().getY() / 64) &&
-//                                (actionField.getTank().getX() / 64 == actionField.getAgressor().getX() / 64)) {
-//                    fire();
-//                }
                 move();
             }
         } else if ((tankYNew - getY()) < 0) {
             int steps = Math.abs((getY() - tankYNew) / 64);
             for (int step = 0; step < steps; step++) {
                 turn(Direction.UP);
-//                if ((battleField.getBattleField()[getY() / 64 - 1][getX()/64] instanceof Brick)  ||
-//                        ((actionField.getTank().getY() / 64 - 1) == actionField.getAgressor().getY() / 64) &&
-//                                (actionField.getTank().getX()/64 == actionField.getAgressor().getX() / 64)) {
-//                    fire();
-//                }
                 move();
             }
         }

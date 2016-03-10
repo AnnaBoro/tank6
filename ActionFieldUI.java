@@ -8,10 +8,6 @@ import java.awt.event.ActionListener;
 
 public class ActionFieldUI implements ActionListener {
 
-    public boolean isReRun() {
-        return reRun;
-    }
-
     private boolean reRun = false;
     private JFrame frameDialog;
     public JDialog dialog;
@@ -30,6 +26,10 @@ public class ActionFieldUI implements ActionListener {
 
         this.actionField = actionField;
         this.frameDialog = frame;
+    }
+
+    public boolean isReRun() {
+        return reRun;
     }
 
     private void initDialog(){
